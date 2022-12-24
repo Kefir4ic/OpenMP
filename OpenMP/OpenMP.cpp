@@ -45,10 +45,15 @@ int get_matrix_size() {
 			exit = true;
 		}
 		if (exit) {
-			break;
+			matrix_size = atoi(input.c_str());
+			if (matrix_size <= 0) {
+				cout << "Некорректный ввод! Размерность матрицы слишком маленькая!" << endl;
+			}
+			else {
+				break;
+			}
 		}
 	}
-	matrix_size = atoi(input.c_str());
 	return matrix_size;
 }
 
@@ -74,10 +79,10 @@ void set_threads() {
 		if (exit) {
 			num_of_threads = atoi(input.c_str());
 			if (num_of_threads <= 0) {
-				cout << "Некорректный ввод! Введено слишком мало потоков" << endl;
+				cout << "Некорректный ввод! Введено слишком мало потоков!" << endl;
 			}
 			else if (num_of_threads > max_threads) {
-				cout << "Некорректный ввод! Введено слишком потоков" << endl;
+				cout << "Некорректный ввод! Введено слишком потоков!" << endl;
 			}
 			else {
 				omp_set_num_threads(num_of_threads);
@@ -92,8 +97,13 @@ int main()
 {
 	setlocale(LC_ALL, "Russian");
 	int i, j, k, N;
+
 	N = get_matrix_size();
+	cout << "" << endl;
+
 	set_threads();
+	cout << "" << endl;
+
 	float** a, ** b, ** c;
 	a = new float* [N];
 	for (i = 0; i < N; i++)
@@ -116,6 +126,9 @@ int main()
 	umn_matr(a, b, c, N);
 	tk = omp_get_wtime();
 	cout << "Время стандартного умножения = " << tk - tn << endl;
+
+	cout << "" << endl;
+
 	cout << "Начато параллельное умножение матриц" << endl;
 	t1 = omp_get_wtime();
 	umn_matr_parallel(a, b, c, N);
